@@ -28,3 +28,21 @@ jobs:
         run: node docgen.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          
+      - name: Commit & push generated docs
+        if: success()                         # only run if doc generation succeeded
+        run: |
+          git config --local user.name  "docs-bot"
+          git config --local user.email "actions@github.com"
+
+          # Check if anything in /docs changed
+          if [[ -n "$(git status --porcelain docs)" ]]; then
+            git add docs
+            git commit -m "chore(docs): auto-update generated docs [skip ci]"
+            git push origin HEAD:${{ github.ref }}
+          else
+            echo "No changes to commit"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
