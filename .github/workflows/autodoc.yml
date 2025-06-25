@@ -1,48 +1,45 @@
-name: Auto-Generate Documentation
+name: Auto-Generate Docs
 
 on:
-  workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - 'screens/**'
+      - 'components/**'
       - 'server/**'
-      - 'App.js'
+      - 'docgen.js'
 
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Set up Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: npm install axios dotenv
+      - name: Install axios
+        run: npm install axios
 
       - name: Generate documentation
         run: node docgen.js
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          
-      - name: Commit & push generated docs
-        if: success()                         # only run if doc generation succeeded
-        run: |
-          git config --local user.name  "docs-bot"
-          git config --local user.email "actions@github.com"
 
-          # Check if anything in /docs changed
-          if [[ -n "$(git status --porcelain docs)" ]]; then
-            git add docs
-            git commit -m "chore(docs): auto-update generated docs [skip ci]"
-            git push origin HEAD:${{ github.ref }}
+      - name: Commit and push docs
+        run: |
+          git config --local user.name "docs-bot"
+          git config --local user.email "actions@github.com"
+          git add docs
+          if git diff --cached --quiet; then
+            echo "🟢 No changes to commit"
           else
-            echo "No changes to commit"
+            git commit -m "docs: auto-update markdown docs [skip ci]"
+            git push origin HEAD:${{ github.ref }}
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
