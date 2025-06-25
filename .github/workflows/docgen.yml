@@ -1,0 +1,28 @@
+name: Auto Generate Docs
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'components/**'
+  workflow_dispatch:
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install axios dotenv
+
+      - name: Run doc generation script
+        run: node docgen.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
