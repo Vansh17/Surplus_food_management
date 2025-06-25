@@ -9,7 +9,7 @@
 //     </View>
 //   );
 // }
-
+//new comment added
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
