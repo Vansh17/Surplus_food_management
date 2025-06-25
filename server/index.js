@@ -3,7 +3,7 @@ import express from 'express';
 const app = express();
 const port =3000;
 const PUBLISHABLE_KEY="pk_test_51KcRPkSGmv1wnKmRALjzzU8KpZbK3bu8xESTCT7NTNu4O8DMh0WFj2ghJa92IftEr4lDw6exLz5UxOxtUkByH42x00woVxgN2I";
-const SECRET_KEY="sk_test_51KcRPkSGmv1wnKmRAPdHYtCx7mi8C5ayg05ah88lcd0wgNtv7sljDgTq070jj8HMed58WQMVXa77M81BoCZCy3SP000Ry7Pwlh";
+
 import Stripe from "stripe";
 
 //Confirm the API version from your stripe dashboard
